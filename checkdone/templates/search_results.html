@@ -1,0 +1,99 @@
+<!-- { % extends 'basic/index.html' %} подключаем базовый шаблон -->
+{% extends './search_form.html' %} <!-- подключаем поисковый шаблон -->
+{% load todos_extras %} <!-- подключаем custom template filters -->
+{% block title %}Search results{% endblock %}<!-- меняем title -->
+{% block content %}<!-- место для контента -->
+<p>You searched for: <strong>{{ query }}</strong></p>
+
+{% if todos %}
+    <p>Found {{ todos|length }} task{{ todo|pluralize }}.</p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Done?</th>
+                <th>Task</th>
+                <th>Deadline</th>
+                <!-- <th>Countdown (Clock)</th> -->
+                <th>Progress</th>
+                <th>Erase?</th>
+            </tr>
+        </thead>
+        <tbody class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check" }}">
+        {% for todo in todos %} <!-- итерация по всем постам -->
+            <tr class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check" }}">
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    {% if todo.check|done_task:1 == 'checked' and todo.donedate %}
+                    <div class="checkbox" onclick="return false" data-toggle="tooltip" data-placement="auto bottom" title="Done: {{ todo.donedate }}">
+                    {% elif todo.check|done_task:1 == 'checked' and not todo.donedate %}
+                    <div class="checkbox" onclick="return false" data-toggle="tooltip" data-placement="auto bottom" title="Done: unknown date">
+                    {% else %}
+                    <div class="checkbox" onclick="location.href = '/check/{{todo.id}}'">
+                    {% endif %}
+                        <!--<label>-->
+                            <input class="squaredCheckbox {{ todo.check|done_task:2 }}" type="checkbox" id="doneCheckbox2" value="{{ todo.check }}" {{ todo.check|done_task:1 }} aria-hidden="true" onchange="location.href = '/check/{{todo.id}}'"> {{ todo.check }}
+                        <!--</label>-->
+                    </div>
+                </td> <!-- checkbox -->
+                <td>
+                    {{ todo.text|highlight:query }}
+                    {% if todo.textexp %}
+                    <div class="dropdown dropdown-toggle btn btn-inverse" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" aria-disabled="true">
+                        <span class="caret"></span>
+                    </div>
+                    <ul class="dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li>{{ todo.textexp|highlight:query }}</li>
+                    </ul>
+                    {% else %}
+                    <!--{{ todo.text|highlight:query }}-->
+                    {% endif %}
+                </td>
+                <!--<td>{{ todo.deadline|date_to_str:1|highlight:query }}</td>--> <!-- deadline -->
+                <td>{{ todo.deadline|highlight:query }}</td> <!-- deadline -->
+                <!-- <td>Countdown (Clock)</td> -->
+                <td>
+                    <!--{{ todo.progress }}-->
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ todo.progress }}" aria-valuemin="0"\
+                           aria-valuemax="100" style="width: {{ todo.progress }}%;">
+                            {{ todo.progress|highlight:query }}%
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#delete_{{todo.id}}" aria-label="Delete">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true" alt="Del&times;">&nbsp;|&nbsp;{{todo.id|highlight:query}}</span>
+                    </button>
+                    <!-- Delete-Modal -->
+                    <div class="modal fade" id="delete_{{todo.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header alert alert-danger">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="deleteModalLabel">Warning!</h4>
+                          </div>
+                          <div class="modal-body">
+                            Do you really want to delete this to-do event?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-md" onclick="location.href = '/delete/{{todo.id}}'">Delete {{todo.id}}</button>
+                            <button type="button" class="btn btn-primary btn-md" data-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Delete-Modal -->
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No tasks matched your search criteria.</p>
+{% endif %}
+    </div>
+{% endblock %}
