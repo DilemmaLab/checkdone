@@ -1,0 +1,37 @@
+{% extends 'basic/index.html' %} <!-- подключаем базовый шаблон -->
+{% block title %}Search through events{% endblock %}
+{% block search %}
+<div id="todo" class="container">
+    <div class="row-fluid">
+        <div class="row col-md-12 col-sm-10 col-xs-8">
+            <div class="row col-md-12 col-sm-10 col-xs-8">
+                <div class="col-md-11 col-sm-9 col-xs-7">
+                    <a href="/"><h2>To-Do List</h2></a>
+                    <!-- go to home-page -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <form action="/search/" method="get">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" value= "{{ query }}" placeholder="Search for task..." required="True">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true" alt="Go!">
+                            <!--<input type="submit" value="Search">-->
+                        </span>
+                    </button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </form>
+</div><!-- /.row -->
+<hr>
+{% endblock %}
+{% block content %}
+
+{% endblock %}

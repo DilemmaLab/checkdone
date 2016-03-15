@@ -1,0 +1,111 @@
+{% load static from staticfiles %} <!-- подгружаем статику -->
+{% load staticfiles %}
+<!--{ % load adminmedia %} <!--Admin DateTimePicker (admin media depricated) -->
+<!--{ % load admin_static %} <!--Admin DateTimePicker -->
+<!--{ % load i18n %} <!--Admin DateTimePicker -->
+<!--{ % load admin_urls %} <!--Admin DateTimePicker -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block meta %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="checkdone, todo list, todo service, schedule">
+    <!-- подключаем наш css-файл - или локальный bootstrap, или с офф. репа -->
+    <!-- <link href="{% static "basic/css/bootstrap.min.css" %}" rel="stylesheet"> -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <!-- подключаем наш local custom css-файл со стилями проекта -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />
+    <!-- шрифты -->
+    <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+
+    <!--Django admin CSS-files-->
+    <!--<link rel="stylesheet" type="text/css" href="{% static "admin/css/base.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/global.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/widgets.css" %}" />
+    <link rel="stylesheet" href="{% static 'admin/css/login.css' %}">-->
+    <!-- [ if lte IE 7] ><link rel="stylesheet" type="text/css" href="{% static "admin/css/ie.css" %}" /><![endif]-->
+    <!-- [if lte IE 7]><![endif]-->
+    <!--Django admin CSS-files-->
+
+    <!--Admin DateTimePicker -->
+    <!--<script type="text/javascript">window.__admin_media_prefix__ = "{% static "admin/" %}";</script>
+    <script type="text/javascript" src={% static "admin/jsi18n/" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/core.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/admin/RelatedObjectLookups.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/jquery.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/jquery.init.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/actions.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/calendar.js" %}"></script>
+    <script type="text/javascript" src={% static "admin/js/admin/DateTimeShortcuts.js" %}"></script>
+    {{ profile_form.media }} --> 
+    <!--Admin DateTimePicker -->
+    <!--Django admin Script-files-->
+    <meta name="robots" content="NONE,NOARCHIVE">
+    {% endblock %}
+    <title>{% block title %}Welcome to ToDo-service!{% endblock %}</title>
+</head>
+<body>
+    {% block header %}
+        {% include "basic/header.html" %} <!-- подключаем «шапку» сайта -->
+    {% endblock %}
+    <div id="content" class="container">
+        {% block search %}
+        {% endblock %}
+        {% block content %} <!-- место для контента -->
+        <h2>Welcome to To-Do Service!</h2>
+        <p>Here you can host your important events and planning deals.</p>
+        <div class="row">
+            <div class="alert alert-info">
+                &nbsp;
+                <a href="./add" id="addNew0">
+                    Try it now! Add new event.
+                    &nbsp;|&nbsp;
+                    <span class="glyphicon glyphicon-pencil icon-2x" title="Try it now!">
+                    </span>
+                </a>
+            </div>
+            <div class="alert alert-info">
+                <a href="./todo" id="showAll0">
+                    Check, what already stored.
+                    &nbsp;|&nbsp;
+                    <span class="glyphicon glyphicon-home icon-2x" title="Check stored events">
+                    </span>
+                </a>
+            </div>
+            <div class="alert alert-info">
+                <a href="./search/form" id="search0">
+                    Search through stored items.
+                    &nbsp;|&nbsp;
+                    <span class="glyphicon glyphicon-search icon-2x" title="Search">
+                    </span>
+                </a>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+    {% block footer %} <!-- подключаем «подвал» сайта -->
+        {% include "basic/footer.html" %}
+    {% endblock %}
+    <!--Calendar-->
+    <!--        -->
+    <!--Calendar-->
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <!-- подключаем наш js-файл - или локальный bootstrap, или с офф. репа -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--<script src="{% static "js/bootstrap.min.js" %}"></script>-->
+    <!-- подключаем наш local custom js-файл, инициализирующий "фичи" проекта: jquery-datepicker, delete toogle-modal window -->
+    <script src="{% static "js/scripts.js" %}"></script>
+    <!-- Jquery Datepicker -->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <!-- Jquery Datepicker -->
+</body>
+</html>

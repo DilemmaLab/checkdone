@@ -1,0 +1,155 @@
+<!--{ % extends 'basic/index.html' %} <!-- подключаем базовый шаблон -->
+{% extends "add.html" %} <!-- подключаем поисковый и базовый шаблон -->
+{% load todos_extras %}
+{% block title %}ToDo-list{% endblock %}<!-- меняем title -->
+{% block content %}<!-- место для контента -->
+    <div id="todo" class="container">
+        <div class="row-fluid">
+            <div class="row col-md-12 col-sm-10 col-xs-8">
+                <div class="row col-md-12 col-sm-10 col-xs-8">
+                    <div class="col-md-11 col-sm-9 col-xs-7">
+                        <a href="/"><h2>To-Do List</h2></a>
+                        <!-- место для add-формы -->
+                        <p>Add new to-do event to your plan:</p>
+                    </div>
+                    {% block navbar %}
+                    <div class="col-md-1 col-sm-1 col-xs-1">
+                        <div class="navbar">
+                            <div class="col-md-1 col-sm-1 col-xs-1" aria-disabled="true" data-placement="auto left" data-toggle="tooltip"
+                                 title="User Account (Not implemented yet)" >
+                                <a href="#" class="col-sm-4 btn btn-link disabled" data-placement="auto left" data-toggle="tooltip"
+                                   alt="User{if not logged}login{else}settings{endif} (Not implemented yet)"
+                                   title="User Account (Not implemented yet)" id="nav1">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-user icon-2x" title="User">
+                                        </span>
+                                </a>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1">
+                                <a href="/add" class="col-sm-4 btn btn-link" data-placement="auto left" data-toggle="tooltip"
+                                   alt="Add new" title="Add new event" id="nav2">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-pencil icon-2x" title="Add new event">
+                                        </span>
+                                </a>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1">
+                                <a href="/search/form" class="col-sm-4 btn btn-link" data-placement="auto left" data-toggle="tooltip"
+                                   alt="Search for item" title="Search through stored items" id="nav3">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-search icon-2x" title="Search">
+                                        </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block add %}
+            {{ block.super }}
+        {% endblock %}
+        <hr>
+
+        <div class="col-md-11 col-sm-9 col-xs-7">
+            <p>Currently you hosted following deals with our service:</p>
+        </div>
+        {% block search %}
+            {{ block.super }}
+        {% endblock %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Done?</th>
+                    <th>Task</th>
+                    <th>Deadline</th>
+                    <!-- <th>Countdown (Clock) (Not Implemented Yet)</th> -->
+                    <th>Progress</th>
+                    <th>Erase?</th>
+                </tr>
+            </thead>
+            <!--<tbody class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check|done_task:0" }}">
+            -->
+            <tbody class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check" }}">
+            {% for todo in todos %} <!-- итерация по всем постам -->
+                <!-- <tr class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check|done_task:0" }}" id="id_{{ todo.id }}">--
+                -->
+                <tr class="{{ todo.check|done_task:0 }} {{ todo.deadline|expired_task:"todo.check" }}" id="id_{{ todo.id }}">
+                    <!--<td>{{ forloop.counter0 }}</td>-->
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if todo.check|done_task:1 == 'checked' and todo.donedate %}
+                        <div class="checkbox" onclick="return false" data-toggle="tooltip" data-placement="auto bottom" title="Done: {{ todo.donedate|date_to_str:1 }}">
+                        {% elif todo.check|done_task:1 == 'checked' and not todo.donedate %}
+                        <div class="checkbox" onclick="return false" data-toggle="tooltip" data-placement="auto bottom" title="Done: unknown date">
+                        {% else %}
+                        <!--<div class="checkbox" onclick="location.href = '/check/{{todo.id}}'">-->
+                        <div class="checkbox" onclick="location.href = '/check/{{todo.id}}'">
+                        {% endif %}
+                            <!--<label>-->
+                                <input class="squaredCheckbox {{ todo.check|done_task:2 }}" type="checkbox" id="doneCheckbox4" value="{{ todo.check }}" {{ todo.check|done_task:1 }} aria-hidden="true" onchange="location.href = '/check/{{todo.id}}'">
+                                </input>
+                            <!--</label>-->
+                        </div>
+                    </td> <!-- checkbox -->
+                    <td>
+                        {{ todo.text }}
+                        {% if todo.textexp %}
+                        <div class="dropdown dropdown-toggle btn btn-inverse" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" aria-disabled="true">
+                            <span class="caret"></span>
+                        </div>
+                        <ul class="dropdown dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>{{ todo.textexp }}</li>
+                        </ul>
+                        {% else %}
+                        <!--{{ todo.text }}-->
+                        {% endif %}
+                    </td>
+                    <td>{{ todo.deadline|date_to_str:1 }}</td> <!-- deadline -->
+                    <!-- <td>Countdown (Clock) (Not Implemented Yet)</td> -->
+                    <td>
+                        <!-- Progress -->
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar4" aria-valuenow="{{ todo.progress }}" aria-valuemin="0"\
+                                aria-valuemax="100" style="width: {{ todo.progress }}%;">
+                                {{ todo.progress }}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#delete_{{todo.id}}" aria-label="Delete">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true" alt="Del&times;">&nbsp;|&nbsp;{{todo.id}}</span>
+                        </button>
+                        <!-- Delete-Modal -->
+                        <div class="modal fade" id="delete_{{todo.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header alert alert-danger">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="deleteModalLabel">Warning!</h4>
+                              </div>
+                              <div class="modal-body">
+                                Do you really want to delete this to-do event?
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-md" onclick="location.href = '/delete/{{todo.id}}'">Delete {{todo.id}}</button>
+                                <button type="button" class="btn btn-primary btn-md" data-dismiss="modal">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Delete-Modal -->
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
