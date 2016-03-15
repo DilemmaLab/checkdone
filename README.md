@@ -58,43 +58,50 @@ $ sudo apt-get install libapache2-mod-wsgi
     
 	2.5. Подключаем наше приложение к прочим:
   	INSTALLED_APPS = [
-      ...,
-      'todos',
-      ...,
-    ]
+	      ...,
+	      'todos',
+	      ...,
+	    ]
     
-  2.6. Создаем модель Todo в models.py. Затем:
-  $ python manage.py makemigrations todos
-  $ python manage.py migrate
+  	2.6. Создаем модель Todo в models.py. Затем:
+  	$ python manage.py makemigrations todos
+  	$ python manage.py migrate
   
-  2.7. Подключаем доступ к модели через интерфейс администратора:
-      в admin.py:
-        admin.site.register(Todo)
+  	2.7. Подключаем доступ к модели через интерфейс администратора:
+      	в admin.py:
+        	admin.site.register(Todo)
         
-  2.8. Создаем собственную форму в forms.py.
-  2.9. Создаем необходимые функции добавления, вывода, удаления и поиска контента в views.py.
-  2.10. Прописываем все необходимые url'ы в urls.py.
-  2.11. Создаем базовый шаблон index.html в templates/basic, в нем подключаем все библиотеки; создаем шаблоны вывода всех данных из модели (todo.html), добавления новой задачи (add.html), формы поиска (search_form.html), собственной страницы 404. Отдельно создаем шаблон вывода результатов поиска (search_result.html), поскольку в нем мы будем использовать подсветку найденных слов для удобства пользователя.
+  	2.8. Создаем собственную форму в forms.py.
+  	2.9. Создаем необходимые функции добавления, вывода, удаления и поиска контента в views.py.
+  	2.10. Прописываем все необходимые url'ы в urls.py.
+  	2.11. Создаем базовый шаблон index.html в templates/basic, в нем подключаем все библиотеки; создаем шаблоны вывода всех данных из модели (todo.html), добавления новой задачи (add.html), формы поиска (search_form.html), собственной страницы 404. Отдельно создаем шаблон вывода результатов поиска (search_result.html), поскольку в нем мы будем использовать подсветку найденных слов для удобства пользователя.
   
-  2.12. Прописываем необходимые сведения для поиска сервером static-файлов .css и .js:
-	  INSTALLED_APPS = [
-    ...,
-    'django.contrib.staticfiles',
-    ...,
-    ]
-    ...
-    STATIC_ROOT = os.path.join(BASE_DIR, '/static')
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "checkdone/templates/static"),
-        'checkdone/templates/static',
-    ]
+  	2.12. Прописываем необходимые сведения для поиска сервером static-файлов .css и .js:
+		  INSTALLED_APPS = [
+	    ...,
+	    'django.contrib.staticfiles',
+	    ...,
+	    ]
+	    ...
+	    STATIC_ROOT = os.path.join(BASE_DIR, '/static')
+	    STATIC_URL = '/static/'
+	    STATICFILES_DIRS = [
+	        os.path.join(BASE_DIR, "checkdone/templates/static"),
+	        'checkdone/templates/static',
+	    ]
     
-  2.13. Создаем собственные фильтры для обработки вывода результатов поиска (todos_extras.py) и включаем их в settings.py:
-  INSTALLED_APPS = [
-    ...,
-    'todos.templatetags.todos_extras',
-  ]
+	2.13. Создаем собственные фильтры для обработки вывода результатов поиска (todos_extras.py) и включаем их в settings.py:
+	  INSTALLED_APPS = [
+	    ...,
+	    'todos.templatetags.todos_extras',
+	  ]
+	  
+	2.14. Готово, применяем все изменения:
+		$ python manage.py makemigrations todos
+	  	$ python manage.py migrate
+   	и можно тестить на debug-сервере:
+   		$ python manage.py runserver 0.0.0.0:8000
+	
 
 3. Подготовка в релиз:
 3.1. Меняем в settings.py
@@ -103,11 +110,29 @@ $ sudo apt-get install libapache2-mod-wsgi
       Кстати, мы это делаем не только из соображений безопасности, но и потому, что наша красивая custom'ная страница 404 не будет отображаться в debug-mode.
 	3.1.2. Разрешаем любые хосты:
 			ALLOWED_HOSTS = ['*']
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+В данный момент не реализовано:
+1) Проблема с полем даты DoneDate, когда сделана задача - поле формы отдает введенное значение, но во views.add приходит None. Так как я прописала, что в случае, если задача отмечена, как сделанная, но не указана дата DoneDate, она инициализируется значением timezone.now(), то все даты проставляются текущим числом. Upset :(
+2) Ajax-технология пока не включена (хотя и планируется), поскольку я предпочла уделить больше времени на разработку сайта, как можно менее забаженного, чем сделать все задачи, но плохо отладить их. Зато я уверена в том, что разработала процентов на 95% :)
+3) В поисковике не match'атся кириллические символы, и это для меня загадка - хотя я и не указывала default charset при создании db_django, я прописала 
+4) Также интерфейс Управления пользовательскими настройками, регистрацией и входом/выходом (сессии, Cookie, шифрование пароля) не разработан. Пока для меня это выглядит, как долгоиграющая задача, но насколько я поняла, вторая модель - это именно модель User. На скорую руку здесь могу только сделать саму модель, но без авторизационных полей, и связать с Todo как User <->> Todo.
+5) Сейчас нет сортировки по полям (это можно сделать очень быстро) и возможности изменять введенные полям (чуть-чуть посложнее, возможно работы на 1-2 дня, чтобы хорошо оформить этот процесс не только технически, но и визуально). Причем поле check, если оно уже отмечено как "True" нельзя изменять специально - что сделано, то сделано :)
+6) Еще я специально хотела сделать детали задания выпадающими при нажатии на основной текст задачи. Но Bootstrap "dropdown-menu" оказался для этой цели не слишком подходящим вариантом, т.к. с него сложно копировать и т.д. (hide'ится после нажатия на его поле). Так что надо этот момент переделывать.
+Кажется, это все. Возможно, есть еще кое-какие проблемы, но пока это все, что выявлено.
+P.S. Сорри за форматирование в Readme, пока не разобралась.
 -------------------------------------------------------------------------------------------------------------------------------
 Currently we have following Unresolved Problematic Issues in our project:
 1) When we set up new task with DoneDate custom value, entered by user in "Done on date" field, DoneDate variable still defines with None-value, and not with user custom input. Therefore, even if we (or user) customizes "Done on date" with date, different from current one, and check "Done", we still receive done task with current date (produced from timezone.now()-function). It's very weird behaviour and currently is not explained. Note: Probably, problem could occurs in Form-implementation or in implementation of Template "Done on date" field, because View.add_new receives already None-value. 
-2) We don't have Ajax-technology on our site (and mostly Jquery as well) - they're in plans, but currently Ajax and Jquery are not implemented. (Sorry, I know, it was required option, but trying to do my best and implement good service, I had no time to implement it - in other case either I would pass the deadline, or made much buggy service). 3) Also, User Account options - Registration, Login/logout, Settings, as well as its technical issues like Sessions, Cookies, Password encryption (md5-hash with salt) - are not implemented yet. 
+2) We don't have Ajax-technology on our site (and mostly Jquery as well) - they're in plans, but currently Ajax and Jquery are not implemented. (Sorry, I know, it was required option, but trying to do my best and implement good service, I had no time to implement it - in other case either I would pass the deadline, or made much buggy service). 
+3) Also, User Account options - Registration, Login/logout, Settings, as well as its technical issues like Sessions, Cookies, Password encryption (md5-hash with salt) - are not implemented yet. 
 4) Implemented Search-service at site do not handle with Cyrillic symbols, although DataBase and all of its tables are "ALTER" setted up with default "CHARSET" as "utf8" and "COLLATE" as "utf8_general_ci" (and currently this behaviour is not explained). 
-5) Currently there is no following options here on site: -- no ascend/descend ordering on fields; -- no availability to change Text, Details, Deadline and Progress of submitted tasks, as well as DoneDate and Done-status of task, already checked as done. 
+5) Currently there is no following options here on site: 
+-- no ascend/descend ordering on fields; 
+-- no availability to change Text, Details, Deadline and Progress of submitted tasks, as well as DoneDate and Done-status of task, already checked as done. 
 6) Also, view of Details, implemented with Bootstrap "dropdown-menu" is not very useful, because it have troubles with Copying content-text and doesn't support adequate Formatting of text (like <b>bold</b> and <br>, \n and &para; new-line symbols), so it should be better re-implemented.
 Issue (5) is really simple, and I know how to implement it, but didn't want to break the deadline. May be something also, but now it's all discovered.
