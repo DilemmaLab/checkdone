@@ -17,7 +17,7 @@ $ sudo apt-get install python-mysqldb
 $ sudo apt-get install libapache2-mod-wsgi
 
 # 2. Django-проект.
-	2.1. Создаем Django-Project:
+2.1. Создаем Django-Project:
 		 ~ $ mkdir DjangoProjects
 		 ~ $ mv DjangoProjects PycharmProjects/
 		 ~ $ cd PycharmProjects/DjangoProjects/
@@ -25,14 +25,14 @@ $ sudo apt-get install libapache2-mod-wsgi
 		 ~/PycharmProjects/DjangoProjects $ cd checkdone/
 		 ~/PycharmProjects/DjangoProjects/checkdone $ python manage.py migrate
 	
-	Можем создать администратора в Sqlite3.db (не обязательно, он не мигрирует на MySQL):
+Можем создать администратора в Sqlite3.db (не обязательно, он не мигрирует на MySQL):
 		 ~/PycharmProjects/DjangoProjects/checkdone $ python manage.py createsuperuser
 		 ~/PycharmProjects/DjangoProjects/checkdone $ python manage.py shell
 		>>> from django.contrib.auth.models import User
 		>>> User.objects.get(username="root", is_superuser=True).delete()
 			(1, {u'auth.User': 1, u'admin.LogEntry': 0, u'auth.User_groups': 0, u'auth.User_user_permissions': 0})
 
-	2.2. Переходим на MySQL. Создаем БД и администратора:
+2.2. Переходим на MySQL. Создаем БД и администратора:
 	~ $ mysql -u root -p***
 	mysql> CREATE DATABASE django_db;
   mysql> CREATE USER IF NOT EXISTS 'dj_root'@'localhost' IDENTIFIED BY '***';
@@ -50,33 +50,33 @@ $ sudo apt-get install libapache2-mod-wsgi
 			    }
 			}
 	
-	2.3. Осуществляем миграцию:
+2.3. Осуществляем миграцию:
 	~/PycharmProjects/DjangoProjects/checkdone $ python manage.py migrate
 	
-	2.4. Создаем приложение todos:
+2.4. Создаем приложение todos:
     ~/PycharmProjects/DjangoProjects/checkdone $ python manage.py startapp todos
     
-	2.5. Подключаем наше приложение к прочим:
+2.5. Подключаем наше приложение к прочим:
   	INSTALLED_APPS = [
 	      ...,
 	      'todos',
 	      ...,
 	    ]
     
-  	2.6. Создаем модель Todo в models.py. Затем:
+2.6. Создаем модель Todo в models.py. Затем:
   	$ python manage.py makemigrations todos
   	$ python manage.py migrate
   
-  	2.7. Подключаем доступ к модели через интерфейс администратора:
+2.7. Подключаем доступ к модели через интерфейс администратора:
       	в admin.py:
         	admin.site.register(Todo)
         
-  	2.8. Создаем собственную форму в forms.py.
-  	2.9. Создаем необходимые функции добавления, вывода, удаления и поиска контента в views.py.
-  	2.10. Прописываем все необходимые url'ы в urls.py.
-  	2.11. Создаем базовый шаблон index.html в templates/basic, в нем подключаем все библиотеки; создаем шаблоны вывода всех данных из модели (todo.html), добавления новой задачи (add.html), формы поиска (search_form.html), собственной страницы 404. Отдельно создаем шаблон вывода результатов поиска (search_result.html), поскольку в нем мы будем использовать подсветку найденных слов для удобства пользователя.
+2.8. Создаем собственную форму в forms.py.
+2.9. Создаем необходимые функции добавления, вывода, удаления и поиска контента в views.py.
+2.10. Прописываем все необходимые url'ы в urls.py.
+2.11. Создаем базовый шаблон index.html в templates/basic, в нем подключаем все библиотеки; создаем шаблоны вывода всех данных из модели (todo.html), добавления новой задачи (add.html), формы поиска (search_form.html), собственной страницы 404. Отдельно создаем шаблон вывода результатов поиска (search_result.html), поскольку в нем мы будем использовать подсветку найденных слов для удобства пользователя.
   
-  	2.12. Прописываем необходимые сведения для поиска сервером static-файлов .css и .js:
+2.12. Прописываем необходимые сведения для поиска сервером static-файлов .css и .js:
 		  INSTALLED_APPS = [
 	    ...,
 	    'django.contrib.staticfiles',
@@ -90,13 +90,13 @@ $ sudo apt-get install libapache2-mod-wsgi
 	        'checkdone/templates/static',
 	    ]
     
-	2.13. Создаем собственные фильтры для обработки вывода результатов поиска (todos_extras.py) и включаем их в settings.py:
+2.13. Создаем собственные фильтры для обработки вывода результатов поиска (todos_extras.py) и включаем их в settings.py:
 	  INSTALLED_APPS = [
 	    ...,
 	    'todos.templatetags.todos_extras',
 	  ]
 	  
-	2.14. Готово, применяем все изменения:
+2.14. Готово, применяем все изменения:
 		$ python manage.py makemigrations todos
 	  	$ python manage.py migrate
    	и можно тестить на debug-сервере:
@@ -105,17 +105,17 @@ $ sudo apt-get install libapache2-mod-wsgi
 
 3. Подготовка в релиз:
 3.1. Меняем в settings.py
-	3.1.1. Выключаем вывод ошибок (Debugg-mode):
+3.1.1. Выключаем вывод ошибок (Debugg-mode):
 			DEBUG = False
-      Кстати, мы это делаем не только из соображений безопасности, но и потому, что наша красивая custom'ная страница 404 не будет отображаться в debug-mode.
-	3.1.2. Разрешаем любые хосты:
+Кстати, мы это делаем не только из соображений безопасности, но и потому, что наша красивая custom'ная страница 404 не будет отображаться в debug-mode.
+3.1.2. Разрешаем любые хосты:
 			ALLOWED_HOSTS = ['*']
 
 
 
 
 
--------------------------------------------------------------------------------------------------------------------------------
+- -
 В данный момент не реализовано:
 1) Проблема с полем даты DoneDate, когда сделана задача - поле формы отдает введенное значение, но во views.add приходит None. Так как я прописала, что в случае, если задача отмечена, как сделанная, но не указана дата DoneDate, она инициализируется значением timezone.now(), то все даты проставляются текущим числом. Upset :(
 2) Ajax-технология пока не включена (хотя и планируется), поскольку я предпочла уделить больше времени на разработку сайта, как можно менее забаженного, чем сделать все задачи, но плохо отладить их. Зато я уверена в том, что разработала процентов на 95% :)
@@ -125,7 +125,7 @@ $ sudo apt-get install libapache2-mod-wsgi
 6) Еще я специально хотела сделать детали задания выпадающими при нажатии на основной текст задачи. Но Bootstrap "dropdown-menu" оказался для этой цели не слишком подходящим вариантом, т.к. с него сложно копировать и т.д. (hide'ится после нажатия на его поле). Так что надо этот момент переделывать.
 Кажется, это все. Возможно, есть еще кое-какие проблемы, но пока это все, что выявлено.
 P.S. Сорри за форматирование в Readme, пока не разобралась.
--------------------------------------------------------------------------------------------------------------------------------
+- -
 Currently we have following Unresolved Problematic Issues in our project:
 1) When we set up new task with DoneDate custom value, entered by user in "Done on date" field, DoneDate variable still defines with None-value, and not with user custom input. Therefore, even if we (or user) customizes "Done on date" with date, different from current one, and check "Done", we still receive done task with current date (produced from timezone.now()-function). It's very weird behaviour and currently is not explained. Note: Probably, problem could occurs in Form-implementation or in implementation of Template "Done on date" field, because View.add_new receives already None-value. 
 2) We don't have Ajax-technology on our site (and mostly Jquery as well) - they're in plans, but currently Ajax and Jquery are not implemented. (Sorry, I know, it was required option, but trying to do my best and implement good service, I had no time to implement it - in other case either I would pass the deadline, or made much buggy service). 
