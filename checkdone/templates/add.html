@@ -1,0 +1,104 @@
+{% extends 'basic/index.html' %} <!-- подключаем базовый шаблон -->
+{% block title %}ToDo-list: add new item{% endblock %}<!-- меняем title -->
+{% block search %}{% endblock %}<!-- поиск search_form -->
+{% block content %}<!-- место для контента -->
+    <div id="add" class="container">
+        <div class="row-fluid">
+            <div class="row col-md-12 col-sm-10 col-xs-8">
+                <div class="row col-md-12 col-sm-10 col-xs-8">
+
+                    <div class="col-md-11 col-sm-9 col-xs-7">
+                        <a href="/"><h2>To-Do List</h2></a>
+                        <!--{ % block add %}<!-- место для add-формы -->
+                        <p>Add new to-do event to your plan:</p>
+                        <!-- <hr> -->
+
+                        {% if form.errors %}
+                        <p style="color: red;">
+                            Please correct the error{{ form.errors|pluralize }} below.
+                        </p>
+                        {% endif %}
+                    </div>
+                    {% block navbar %}
+                    <div class="col-md-1 col-sm-1 col-xs-1">
+                        <div class="navbar">
+                            <div class="col-md-1 col-sm-1 col-xs-1" aria-disabled="true" data-placement="auto left" data-toggle="tooltip"
+                                 title="User Account (Not implemented yet)" >
+                                <a href="#" class="col-sm-4 btn btn-link disabled" data-placement="auto left" data-toggle="tooltip"
+                                   alt="User Account (Not implemented yet)"
+                                   title="User Account (Not implemented yet)" id="nav1">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-user icon-2x" title="User">
+                                        </span>
+                                </a>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1">
+                                <a href="/todo" class="col-sm-4 btn btn-link" data-placement="auto left" data-toggle="tooltip"
+                                   alt="Add new" title="Add new event" id="nav2">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-home icon-2x" title="Check stored events">
+                                        </span>
+                                </a>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1">
+                                <a href="/search/form" class="col-sm-4 btn btn-link" data-placement="auto left" data-toggle="tooltip"
+                                   alt="Search for item" title="Search through stored items" id="nav3">
+                                        |&nbsp;
+                                        <span class="glyphicon glyphicon-search icon-2x" title="Search">
+                                        </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block add %}
+        <div class="row-fluid">
+            <form class="form-inline" role="form" action="/add/" method="post"  id="newTaskForm">{% csrf_token %}
+                <div class="row col-md-12 col-sm-10 col-xs-8">
+                {% for field in form %}
+                    <div class="form-group">
+                        {% if field.errors %}
+                        <div class="alert alert-danger" >
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Warning!</strong>
+                            <span class="">
+                                {% for error in  field.errors %}{{ error }}<br>{% endfor %}
+                            </span>
+                        </div>
+                        {% endif %}
+                        {% if field.name == 'check' %}
+                            {{ field }}
+                        <label class="" for="id_{{ field.name }}1">{{ field.label }}</label> <!-- Done - checkbox -->
+                        {% elif field.name == 'textexp' %}
+                        <label class="" for="id_{{ field.name }}1">{{ field.label }}:</label>
+                            {{ field }}
+                        {% else %}
+                        <label class="" for="id_{{ field.name }}1">{{ field.label }}:</label>
+                            {{ field }}
+                        {% endif %}
+                    </div>
+                        {% if field.name == "donedate" %}
+                    <hr>
+                </div>
+                <div class="row col-md-12 col-sm-10 col-xs-8">
+                        {% endif %}
+                {% endfor %}
+                <button id="submit1" type="submit" class="btn btn-default btn-md">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true" alt="Submit">
+                </span>&nbsp;
+                Submit
+            </button>
+                </div>
+            </form>
+        </div>
+        <div class="row col-md-12 col-sm-10 col-xs-8">
+        <hr>
+        </div>
+        {% endblock %}
+    </div>
+
+{% endblock %}

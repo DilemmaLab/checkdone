@@ -1,0 +1,36 @@
+{% extends 'basic/index.html' %}
+{% block title %}ToDo-list - Wrong Page: 404{% endblock %}
+{% block content %}
+<div id="content" class="container">
+    <!-- {{ url|urlencode }} -->
+    <div class="row-fluid">
+        <div class="row col-md-12 col-sm-10 col-xs-8">
+            <div class="row col-md-12 col-sm-10 col-xs-8">
+                <h1>Oops!</h1>
+            </div>
+            <div class="col-md-12 col-sm-10 col-xs-8">
+                No such a page:
+                <span data-toggle="tooltip" alt="ToDo-list - Wrong Page: 404"
+                       title="ToDo-list 404 Wrong Page: {{ url }}" aria-disabled="true">
+                    <a href="#" class="btn btn-link disabled" data-placement="auto down" data-toggle="tooltip"
+                       alt="ToDo-list 404 Wrong Page: {{ url }}"
+                       title="ToDo-list - Wrong Page: 404" aria-disabled="true">{{ url }}
+                    </a>
+                </span>
+            </div>
+            <hr>
+            <div class="row col-md-12 col-sm-10 col-xs-8" aria-disabled="true" >
+                <p>Don\'t worry! You can go to ToDo-list home-page:</p>
+                <a href="/" class="btn btn-link" data-placement="auto down" data-toggle="tooltip"
+                   alt="Go home!"
+                   title="Even if you aren't yankee :)">Go home!&nbsp;|&nbsp;
+                    <div class="glyphicon glyphicon-hand-right glyphicon-ok-sign icon-2x" alt="Go home!">
+                    </div>
+                    <div class="glyphicon glyphicon-ok-sign icon-2x" alt="Go home!">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
