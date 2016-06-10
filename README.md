@@ -1,5 +1,5 @@
 # checkdone
-Simple To-Do Service
+Simple To-Do Service - http://checkdone.tk.
 
 Использованные framework'и:
 1) Django - основной, front- и back-end. 
